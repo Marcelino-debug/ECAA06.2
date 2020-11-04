@@ -151,7 +151,7 @@ def timerCallBack(event):
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
         if cont == 0: 
-            if aerror < 1:
+            if aerror < .5:
                 cont = 10
                 state = 'state2'
                 msg.angular.z = 0
@@ -162,9 +162,9 @@ def timerCallBack(event):
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
         if cont == 0: 
-            if derror < 1:
+            if derror < 0.05:
                 cont = 10
-                state = 'state2'
+                state = 'state3'
                 msg.linear.x = 0
         else:
             cont -= 1
