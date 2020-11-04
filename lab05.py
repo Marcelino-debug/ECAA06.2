@@ -16,9 +16,9 @@ aderror = 0
 aierror = 0
 
 # Variaveis de controle da distancia --------------------------------
-dkp = 0.02
-dkd = 0.02 
-dki = 0.01
+dkp = 0.04
+dkd = 0.04 
+dki = 0.02
 
 derror = 0
 derrorant = 0
@@ -156,7 +156,7 @@ def timerCallBack(event):
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
         if cont == 0: 
-            if abs(aerror) < 1:
+            if abs(aerror) < 0.5:
                 cont = 10
                 state = 'state2'
                 msg.angular.z = 0
@@ -167,7 +167,7 @@ def timerCallBack(event):
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
         if cont == 0: 
-            if derror < 0.1:
+            if derror < 0.01:
                 cont = 10
                 state = 'state3'
                 msg.linear.x = 0
