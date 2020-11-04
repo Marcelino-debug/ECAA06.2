@@ -17,7 +17,7 @@ aierror = 0
 
 # Variaveis de controle da distancia --------------------------------
 dkp = 0.02
-dkd = 0.02
+dkd = 0.02 
 dki = 0.01
 
 derror = 0
@@ -28,7 +28,6 @@ dierror = 0
 state = 'initial'
 direcao = 0
 cont = 10
-icont = 10
 
 odom = Odometry()
 scan = LaserScan()
@@ -131,8 +130,6 @@ def controlVel(setpoint):
     
     derrorant = derror
     
-    print("derror = ", derror)
-    
     return control
 
 # TIMER - Control Loop ----------------------------------------------
@@ -140,42 +137,38 @@ def timerCallBack(event):
     global state
     global direcao
     global cont
-    global icont
     global derror
     global aerror
     msg = Twist()
     
     print(direcao)
     
-    if icont == 0:
-        if state == 'initial':
-            cilindro = (2.39, 0.47)
-            direcao = getDirection(cilindro)
-            state = 'state1'
-    
-        elif state == 'state1':
-            msg.angular.z = controlAngle(direcao)
-            if cont == 0: 
-                if aerror < 1:
-                    cont = 10
-                    state = 'state2'
-                    msg.angular.z = 0
-            else:
-                cont -= 1
-    
-        elif state == 'state2':
-            distanciaCilindro = 0.5
-            msg.linear.x = controlVel(distanciaCilindro)
-            if cont == 0: 
-                if derror < 0.1:
-                    cont = 10
-                    state = 'state3'
-                    msg.linear.x = 0
-            else:
-                cont -= 1
-        print(state)
-    else:
-        icont -= 1
+    if state == 'initial':
+        cilindro = (2.39, 0.47)
+        direcao = getDirection(cilindro)
+        state = 'state1'
+
+    elif state == 'state1':
+        msg.angular.z = controlAngle(direcao)
+        if cont == 0: 
+            if aerror < 1:
+                cont = 10
+                state = 'state2'
+                msg.angular.z = 0
+        else:
+            cont -= 1
+
+    elif state == 'state2':
+        distanciaCilindro = 0.5
+        msg.linear.x = controlVel(distanciaCilindro)
+        if cont == 0: 
+            if derror < 1:
+                cont = 10
+                state = 'state2'
+                msg.linear.x = 0
+        else:
+            cont -= 1
+    print(state)
     
     pub.publish(msg)
     
@@ -187,12 +180,8 @@ scan_sub = rospy.Subscriber('/scan', LaserScan, scanCallBack)
 timer = rospy.Timer(rospy.Duration(0.05), timerCallBack)
 
 msg = Twist()
-msg.angular.x = 0
-msg.angular.y = 0
 msg.angular.z = 0
 msg.linear.x = 0
-msg.linear.y = 0
-msg.linear.z = 0
 pub.publish(msg)
 
 rospy.spin()
