@@ -7,6 +7,11 @@ import math
 
 
 kp = 0.01
+kd = 0.01 
+ki = 0.01
+
+error = 0
+ierror = 0
 
 odom = Odometry()
 scan = LaserScan()
@@ -33,7 +38,9 @@ def scanCallBack(msg):
 
 # TIMER - Control Loop ----------------------------------------------
 def timerCallBack(event):
-
+    
+    errorant = error
+    
     yaw = getAngle(odom)
     setpoint = -135
     error = (setpoint - yaw)
@@ -44,9 +51,13 @@ def timerCallBack(event):
         else:
             error -= 360
     
+    derror = (error - errorant)/0.05
+    
+    ierror +=  (error - errorant)*0.05
+    
     P = kp*error
-    I = 0
-    D = 0
+    I = ki*ierror
+    D = kd*derror
     control = P+I+D
 
     msg = Twist()
