@@ -43,7 +43,7 @@ def timerCallBack(event):
     global ierror
     
     yaw = getAngle(odom)
-    setpoint = 180
+    setpoint = 0
     error = (setpoint - yaw)
     
     if abs(error) > 180:
