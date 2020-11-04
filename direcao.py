@@ -42,8 +42,12 @@ def timerCallBack(event):
     print(direcao)
     
     msg = Twist()
+    msg.angular.x = 0
+    msg.angular.y = 0
     msg.angular.z = 0
     msg.linear.x = 0
+    msg.linear.y = 0
+    msg.linear.z = 0
     pub.publish(msg)
     
 
