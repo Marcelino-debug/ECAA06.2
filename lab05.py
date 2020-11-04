@@ -44,8 +44,6 @@ def timerCallBack(event):
         else:
             error -= 360
     
-    error = setpoint - read
-    
     P = kp*error
     I = 0
     D = 0
