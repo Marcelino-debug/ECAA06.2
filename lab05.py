@@ -16,9 +16,9 @@ aderror = 0
 aierror = 0
 
 # Variaveis de controle da distancia --------------------------------
-dkp = 0.02
-dkd = 0.02 
-dki = 0.01
+dkp = 0.5
+dkd = 0.5 
+dki = 0.5
 
 derror = 0
 derrorant = 0
@@ -106,6 +106,8 @@ def controlVel(setpoint):
     scan_len = len(scan.ranges)
     if scan_len > 0:
         read = min(scan.ranges[scan_len-10 : scan_len+10])
+        
+        print(read)
         
         derror = -(setpoint - read)
         
