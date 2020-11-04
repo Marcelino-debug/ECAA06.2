@@ -67,6 +67,9 @@ def scanCallBack(msg):
 
 # CONTROL FUNCTIONS -------------------------------------------------
 def controlAngle(setpoint):
+    global akp
+    global akd
+    global aki
     global aerror
     global aerrorant
     global aderror
@@ -98,6 +101,9 @@ def controlAngle(setpoint):
     return control
 
 def controlVel(setpoint):
+    global dkp
+    global dkd
+    global dki
     global derror
     global derrorant
     global dderror
@@ -106,8 +112,6 @@ def controlVel(setpoint):
     scan_len = len(scan.ranges)
     if scan_len > 0:
         read = min(scan.ranges[scan_len-10 : scan_len+10])
-        
-        print("Disteancia = ",read)
         
         derror = -(setpoint - read)
         
@@ -130,6 +134,9 @@ def controlVel(setpoint):
     
     derrorant = derror
     
+    print("Distancia = ",read)
+    print("Erro linear = ",derror)
+    
     return control
 
 # TIMER - Control Loop ----------------------------------------------
@@ -140,8 +147,6 @@ def timerCallBack(event):
     global derror
     global aerror
     msg = Twist()
-    
-    print(direcao)
     
     if state == 'initial':
         cilindro = (2.39, 0.47)
