@@ -133,6 +133,8 @@ def timerCallBack(event):
     global state
     global direcao
     global cont
+    global derror
+    global aerror
     msg = Twist()
     
     print(direcao)
