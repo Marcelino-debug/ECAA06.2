@@ -152,7 +152,7 @@ def timerCallBack(event):
         msg.linear.x = 0
         msg.angular.z = controlAngle(direcao)
         if cont == 0: 
-            if abs(aerror) < 1:
+            if aerror < 1:
                 cont = 10
                 state = 'state2'
                 msg.angular.z = 0
@@ -164,7 +164,7 @@ def timerCallBack(event):
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
         if cont == 0: 
-            if abs(derror) < 1:
+            if derror < 1:
                 cont = 10
                 state = 'state3'
                 msg.linear.x = 0
@@ -182,8 +182,12 @@ scan_sub = rospy.Subscriber('/scan', LaserScan, scanCallBack)
 timer = rospy.Timer(rospy.Duration(0.05), timerCallBack)
 
 msg = Twist()
+msg.angular.x = 0
+msg.angular.y = 0
 msg.angular.z = 0
 msg.linear.x = 0
+msg.linear.y = 0
+msg.linear.z = 0
 pub.publish(msg)
 
 rospy.spin()
