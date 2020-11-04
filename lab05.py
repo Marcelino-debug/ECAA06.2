@@ -27,7 +27,7 @@ dierror = 0
 
 state = 'initial'
 direcao = 0
-cont = 1000
+cont = 10
 
 odom = Odometry()
 scan = LaserScan()
@@ -148,16 +148,17 @@ def timerCallBack(event):
 
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
-        if aerror < 1:
-            state = 'state2'
-            msg.angular.z = 0
+        if cont == 0: 
+            if aerror < 1:
+                cont = 10
+                state = 'state2'
+        else:
+            cont -= 1
 
     elif state == 'state2':
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
-        if derror < 0.1:
-            state = 'state3'
-            msg.linear.x = 0
+        msg.angular.z = controlAngle(direcao)
 
     print(state)
     
