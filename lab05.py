@@ -35,7 +35,7 @@ def scanCallBack(msg):
 def timerCallBack(event):
 
     yaw = getAngle(odom)
-    setpoint = 135
+    setpoint = -135
     error = (setpoint - yaw)
     
     if abs(error) > 180:
