@@ -4,7 +4,6 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 import tf
 import math
-import random
 
 # Variaveis de controle do angulo -----------------------------------
 akp = 0.02
@@ -13,6 +12,7 @@ aki = 0.01
 
 aerror = 0
 aerrorant = 0
+aderror = 0
 aierror = 0
 
 # Variaveis de controle da distancia --------------------------------
@@ -22,10 +22,14 @@ dki = 0.01
 
 derror = 0
 derrorant = 0
+dderror = 0
 dierror = 0
+
+state = 'initial'
 
 odom = Odometry()
 scan = LaserScan()
+
 
 rospy.init_node('cmd_node')
 
@@ -37,23 +41,20 @@ def getAngle(msg):
     yaw = euler[2]*180.0/math.pi
     return yaw
     
-def getCoordenate(matricula):
-    matricula = 201813232
-
-    random.seed(matricula)
-    x = 0
-    y = 0
-
-    while x**2 + y**2 > 4**2 or x**2 + y**2 < 2**2:
-        x = random.random() * 8 - 4
-        y = random.random() * 8 - 4
+def getDirection(objeto):
+    position = odom.pose.pose.position
+    direcao = math.atan((objeto[1]-position.y)/(objeto[0]-position.x))
+    direcao = (180 * direcao / math.pi)
     
-    coord = (x, y)
+    if position.x > 0 and position.y < 0:
+        direcao = direcao
+    elif position.x < 0 and position.y > 0:
+        direcao = direcao + 180
+    elif position.x < 0 and position.y < 0:
+        direcao = direcao - 180
     
-    print(x, y)
+    return direcao
     
-    return coord
-
 # CALLBACKS ---------------------------------------------------------
 def odomCallBack(msg):
     global odom
@@ -64,12 +65,12 @@ def scanCallBack(msg):
     scan = msg
 
 # CONTROL FUNCTIONS -------------------------------------------------
-def controlAngle():
+def controlAngle(setpoint):
     global aerrorant
+    global aderror
     global aierror
     
     yaw = getAngle(odom)
-    setpoint = 180
     aerror = (setpoint - yaw)
     
     if abs(aerror) > 180:
@@ -91,24 +92,21 @@ def controlAngle():
     
     return control
 
-def controlVel():
+def controlVel(setpoint):
     global derrorant
+    global dderror
     global dierror
-    
-    setpoint = (10,-1)
-    position = odom.pose.pose.position
-    dist = setpoint[0] - position.x #math.sqrt((setpoint[0] - position.x)**2 + (setpoint[1] - position.y) **2)
-    derror = dist
-    
-    dderror = (derror - derrorant)/0.05
-    
-    dierror += (derror - derrorant)*0.05
     
     scan_len = len(scan.ranges)
     if scan_len > 0:
         read = min(scan.ranges[scan_len-10 : scan_len+10])
-
-        error = -(setpoint - read)
+        
+        derror = -(setpoint - read)
+        
+        dderror = (derror - derrorant)/0.05
+        
+        dierror += (derror - derrorant)*0.05
+        
         P = dkp*derror
         I = dki*dierror
         D = dkd*dderror
@@ -122,13 +120,30 @@ def controlVel():
 
 # TIMER - Control Loop ----------------------------------------------
 def timerCallBack(event):
+    global state
+    msg = Twist()
     
-    #azcontrol = controlAngle()
-    lxcontrol = controlVel()
+    if state == 'initial':
+        cilindro = (2.39, 0.47)
+        direcao = getDirection(cilindro)
+        state = 'state1'
+
+    elif state == 'state1':
+        msg.angular.z = controlAngle(direcao)
+        if aderror < 2:
+            state = 'state2'
+            msg.angular.z = 0
+
+    elif state == 'state2':
+        distanciaCilindro = 0.5
+        msg.linear.x = controlVel(distanciaCilindro)
+        if derror < 0.01:
+            state = 'state3'
+            msg.linear.x = 0
+
+    print(state)
     
     msg = Twist()
-    #msg.angular.z = azcontrol
-    msg.linear.x = lxcontrol
     pub.publish(msg)
     
 
