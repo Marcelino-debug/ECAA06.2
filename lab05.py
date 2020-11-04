@@ -92,8 +92,8 @@ def controlAngle(setpoint):
     
     aerrorant = aerror
     
-    print(setpoint)
-    print(aerror)
+    print("Direcao = ",setpoint)
+    print("Erro angular = ",aerror)
     
     return control
 
@@ -107,7 +107,7 @@ def controlVel(setpoint):
     if scan_len > 0:
         read = min(scan.ranges[scan_len-10 : scan_len+10])
         
-        print(read)
+        print("Disteancia = ",read)
         
         derror = -(setpoint - read)
         
@@ -151,7 +151,7 @@ def timerCallBack(event):
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
         if cont == 0: 
-            if abs(aerror) < 2:
+            if abs(aerror) < 1:
                 cont = 10
                 state = 'state2'
                 msg.angular.z = 0
@@ -162,9 +162,9 @@ def timerCallBack(event):
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
         if cont == 0: 
-            if derror < 1:
+            if derror < 0.1:
                 cont = 10
-                state = 'state2'
+                state = 'state3'
                 msg.linear.x = 0
         else:
             cont -= 1
