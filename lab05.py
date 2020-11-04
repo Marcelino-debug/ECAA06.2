@@ -67,6 +67,7 @@ def scanCallBack(msg):
 
 # CONTROL FUNCTIONS -------------------------------------------------
 def controlAngle(setpoint):
+    global aerror
     global aerrorant
     global aderror
     global aierror
@@ -97,6 +98,7 @@ def controlAngle(setpoint):
     return control
 
 def controlVel(setpoint):
+    global derror
     global derrorant
     global dderror
     global dierror
