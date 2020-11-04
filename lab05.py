@@ -126,7 +126,6 @@ def timerCallBack(event):
     global direcao
     global cont
     msg = Twist()
-    direcao = 0
     
     if state == 'initial':
         cilindro = (2.39, 0.47)
