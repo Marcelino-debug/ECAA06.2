@@ -93,7 +93,7 @@ def controlAngle(setpoint):
     aerrorant = aerror
     
     print(setpoint)
-    print(control)
+    print(aerror)
     
     return control
 
@@ -152,13 +152,13 @@ def timerCallBack(event):
             if aerror < 1:
                 cont = 10
                 state = 'state2'
+                msg.angular.z = 0
         else:
             cont -= 1
 
     elif state == 'state2':
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
-        msg.angular.z = controlAngle(direcao)
 
     print(state)
     
