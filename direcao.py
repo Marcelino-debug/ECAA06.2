@@ -41,6 +41,11 @@ def timerCallBack(event):
     direcao = getDirection(cilindro)
     print(direcao)
     
+    msg = Twist()
+    msg.angular.z = 0
+    msg.linear.x = 0
+    pub.publish(msg)
+    
 
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 odom_sub = rospy.Subscriber('/odom', Odometry, odomCallBack)
