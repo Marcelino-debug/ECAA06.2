@@ -7,7 +7,7 @@ import math
 
 
 kp = 0.02
-kd = 0.02 
+kd = 0.05 
 ki = 0.01
 
 error = 0
@@ -43,7 +43,7 @@ def timerCallBack(event):
     global ierror
     
     yaw = getAngle(odom)
-    setpoint = 0
+    setpoint = 180
     error = (setpoint - yaw)
     
     if abs(error) > 180:
