@@ -80,7 +80,7 @@ def controlAngle():
     
     aderror = (aerror - aerrorant)/0.05
     
-    aierror +=  (aerror - aerrorant)*0.05
+    aierror += (aerror - aerrorant)*0.05
     
     P = akp*aerror
     I = aki*aierror
@@ -100,11 +100,11 @@ def controlVel():
     dist = setpoint[0] - position.x #math.sqrt((setpoint[0] - position.x)**2 + (setpoint[1] - position.y) **2)
     derror = dist
     
-    derror = (error - derrorant)/0.05
+    dderror = (derror - derrorant)/0.05
     
-    dierror +=  (error - derrorant)*0.05
+    dierror += (derror - derrorant)*0.05
     
-     scan_len = len(scan.ranges)
+    scan_len = len(scan.ranges)
     if scan_len > 0:
         read = min(scan.ranges[scan_len-10 : scan_len+10])
 
@@ -127,7 +127,7 @@ def timerCallBack(event):
     lxcontrol = controlVel()
     
     msg = Twist()
-    msg.angular.z = azcontrol
+    #msg.angular.z = azcontrol
     msg.linear.x = lxcontrol
     pub.publish(msg)
     
