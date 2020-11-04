@@ -164,7 +164,7 @@ def timerCallBack(event):
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
         if cont == 0: 
-            if derror < 1:
+            if derror < 0.1:
                 cont = 10
                 state = 'state3'
                 msg.linear.x = 0
