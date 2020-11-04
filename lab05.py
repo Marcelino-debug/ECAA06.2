@@ -11,6 +11,7 @@ kd = 0.01
 ki = 0.01
 
 error = 0
+errorant = 0
 ierror = 0
 
 odom = Odometry()
@@ -38,8 +39,8 @@ def scanCallBack(msg):
 
 # TIMER - Control Loop ----------------------------------------------
 def timerCallBack(event):
-    
-    errorant = error
+    global errorant
+    global ierror
     
     yaw = getAngle(odom)
     setpoint = 0
@@ -59,7 +60,9 @@ def timerCallBack(event):
     I = ki*ierror
     D = kd*derror
     control = P+I+D
-
+    
+    errorant = error
+    
     msg = Twist()
     msg.angular.z = control
     pub.publish(msg)
