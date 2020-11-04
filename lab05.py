@@ -92,6 +92,9 @@ def controlAngle(setpoint):
     
     aerrorant = aerror
     
+    print(setpoint)
+    print(control)
+    
     return control
 
 def controlVel(setpoint):
@@ -155,7 +158,6 @@ def timerCallBack(event):
 
     print(state)
     
-    msg = Twist()
     pub.publish(msg)
     
 
