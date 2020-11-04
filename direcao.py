@@ -39,6 +39,7 @@ def timerCallBack(event):
     
     cilindro = (2.39, 0.47)
     direcao = getDirection(cilindro)
+    print(direcao)
     
 
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
