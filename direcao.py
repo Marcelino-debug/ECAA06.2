@@ -48,4 +48,9 @@ scan_sub = rospy.Subscriber('/scan', LaserScan, scanCallBack)
 
 timer = rospy.Timer(rospy.Duration(0.05), timerCallBack)
 
+msg = Twist()
+msg.angular.z = 0
+msg.linear.x = 0
+pub.publish(msg)
+
 rospy.spin()
