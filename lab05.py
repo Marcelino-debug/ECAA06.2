@@ -27,6 +27,7 @@ dierror = 0
 
 state = 'initial'
 direcao = 0
+cont = 100
 
 odom = Odometry()
 scan = LaserScan()
@@ -123,6 +124,7 @@ def controlVel(setpoint):
 def timerCallBack(event):
     global state
     global direcao
+    global cont
     msg = Twist()
     direcao = 0
     
@@ -133,16 +135,22 @@ def timerCallBack(event):
 
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
-        if aderror < 2:
+        if cont == 0:
+            cont = 100
             state = 'state2'
             msg.angular.z = 0
+        else:
+            cont -= 1
 
     elif state == 'state2':
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
-        if derror < 0.01:
+        if cont == 0:
+            cont = 100
             state = 'state3'
             msg.linear.x = 0
+        else:
+            cont -= 1
 
     print(state)
     
