@@ -26,6 +26,7 @@ dderror = 0
 dierror = 0
 
 state = 'initial'
+direcao = 0
 
 odom = Odometry()
 scan = LaserScan()
@@ -121,7 +122,9 @@ def controlVel(setpoint):
 # TIMER - Control Loop ----------------------------------------------
 def timerCallBack(event):
     global state
+    global direcao
     msg = Twist()
+    direcao = 0
     
     if state == 'initial':
         cilindro = (2.39, 0.47)
