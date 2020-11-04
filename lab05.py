@@ -32,7 +32,6 @@ cont = 1000
 odom = Odometry()
 scan = LaserScan()
 
-
 rospy.init_node('cmd_node')
 
 # Auxiliar functions ------------------------------------------------
@@ -145,22 +144,16 @@ def timerCallBack(event):
 
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
-        if cont == 0:
-            cont = 1000
+        if aerror < 1:
             state = 'state2'
             msg.angular.z = 0
-        else:
-            cont -= 1
 
     elif state == 'state2':
         distanciaCilindro = 0.5
         msg.linear.x = controlVel(distanciaCilindro)
-        if cont == 0:
-            cont = 1000
+        if derror < 0.1:
             state = 'state3'
             msg.linear.x = 0
-        else:
-            cont -= 1
 
     print(state)
     
@@ -172,5 +165,10 @@ odom_sub = rospy.Subscriber('/odom', Odometry, odomCallBack)
 scan_sub = rospy.Subscriber('/scan', LaserScan, scanCallBack)
 
 timer = rospy.Timer(rospy.Duration(0.05), timerCallBack)
+
+msg = Twist()
+msg.angular.z = 0
+msg.linear.x = 0
+pub.publish(msg)
 
 rospy.spin()
