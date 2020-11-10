@@ -162,7 +162,7 @@ def timerCallBack(event):
     elif state == 'state1':
         msg.angular.z = controlAngle(direcao)
         if cont == 0: 
-            if abs(aerror) < 0.5:
+            if abs(aerror) < 0.1:
                 cont = 10
                 state = 'state2'
                 msg.angular.z = 0
